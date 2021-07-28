@@ -12,11 +12,10 @@ import (
 	"github.com/shirou/gopsutil/mem"
 )
 
-var addr = flag.String("addr", "localhost:1337", "http service address")
-
 var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
 }
 
 type Data struct {
@@ -80,5 +79,5 @@ func main() {
 	flag.Parse()
 	log.SetFlags(0)
 	http.HandleFunc("/echo", echo)
-	http.ListenAndServe(*addr, nil)
+	log.Fatal(http.ListenAndServe(":8888", nil))
 }
